@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hotel Royal Square</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div style="background-image: linear-gradient(45deg, black, transparent); display: flex; align-items: center; padding: 12px;">
+        <img src="img/logo.svg" width="200" alt="Hotel Royal Square Logo">
+        <span class="hotel-title">Hotel Royal Square</span>
+    </div>
+    <div class="container">
+        <section id="booking-section" style="margin-bottom: 40px;">
+            <h2>Room Booking</h2>
+            <form id="roomForm">
+                <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 10px; justify-content: flex-start; grid-column: 3">
+                    <label style="margin-bottom:0;">
+                        Guest Name:
+                        <input type="text" id="guestName" placeholder="Guest Name" required />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Number of Person:
+                        <input type="number" id="numPerson" min="1" placeholder="No. of Person" required />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Check-in Date & Time:
+                        <input type="datetime-local" id="checkInTime" required />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Check-out Date & Time:
+                        <input type="datetime-local" id="checkOutTime" />
+                    </label>
+                    <label style="margin-bottom:0; display:flex;">
+                        Room Category:
+                        <select id="category" required style="margin-right:8px;">
+                            <option value="">Select Category</option>
+                            <option value="Delux">Delux</option>
+                            <option value="Super Delux">Super Delux</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Family Room">Family Room</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Enter Amount:
+                        <input type="number" id="roomPrice" min="1" required placeholder="Enter room price" />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Payment Type:
+                        <select id="paymentType" required>
+                            <option value="">Select Payment</option>
+                            <option value="Online">Online</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Advance Paid:
+                        <input type="number" id="advancePaid" min="0" placeholder="Advance Paid" />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Room Number:
+                        <input type="text" id="roomNumber" placeholder="Room Number (Select check-in date first)" title="Room number requirement depends on check-in date" />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Booking Source:
+                        <select id="bookingSource" required>
+                            <option value="">Select Source</option>
+                            <option value="MMT">MMT</option>
+                            <option value="Booking.com">Booking.com</option>
+                            <option value="Agoda">Agoda</option>
+                            <option value="Goibibo">Goibibo</option>
+                            <option value="Direct">Direct</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Address (Optional):
+                        <input type="text" id="guestAddress" placeholder="Guest Address" />
+                    </label>
+                    <label style="margin-bottom:0;">
+                        Mobile Number (Optional):
+                        <input type="text" id="guestMobile" placeholder="Mobile Number" />
+                    </label>
+                    <button type="submit"
+                        style="height: 44px; padding: 0 24px; font-size: 1rem; border-radius: 20px; font-weight: 700; margin-top: 24px; width: auto;">Add
+                        Room</button>
+                </div>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>Reg No</th>
+                        <th>Guest Name</th>
+                        <th>PR</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Room Number</th>
+                        <th>Tariff (Cash)</th>
+                        <th>Tariff (Online)</th>
+                        <th>Advance Paid</th>
+                        <th>Days</th>
+                        <th>Status</th>
+                        <th>Total Amount</th>
+                        <th>Actions/Bills</th>
+                    </tr>
+                </thead>
+                <tbody id="roomTableBody">
+                    <tr class="empty-row">
+                        <td colspan="13">No rooms added yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section id="upcoming-checkin-section" style="margin-bottom: 40px; padding: 32px">
+            <h2>Upcoming Check-Ins</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>Guest Name</th>
+                        <th>PR</th>
+                        <th>Check-in Date</th>
+                        <th>Check-in Time</th>
+                        <th>Room Number</th>
+                        <th>Room Category</th>
+                        <th>Tariff</th>
+                        <th>Advance Paid</th>
+                        <th>Days</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="upcomingCheckinTableBody">
+                    <tr class="empty-row">
+                        <td colspan="12">No upcoming check-ins.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section id="accounts-section" style="margin-bottom: 40px;">
+            <div style="display: flex; gap: 16px;">
+                <section id="canteen-section">
+                    <h2>Canteen Bill</h2>
+                    <form id="canteenBillForm" style="grid-template-columns: none;">
+                        <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 12px;">
+                            <label style="margin-bottom:0;">
+                                Item Description:
+                                <input type="text" id="canteenBillRoom" placeholder="Description" required />
+                            </label>
+                            <label style="margin-bottom:0;">
+                                Amount:
+                                <input type="number" id="canteenBillAmount" placeholder="Amount" min="1" required />
+                            </label>
+                            <button type="submit"
+                                style="height: 44px; padding: 0 24px; font-size: 1rem; border-radius: 20px; font-weight: 700; margin-top: 24px; width: auto;">Add
+                                Item</button>
+                        </div>
+                    </form>
+                    <table class="canteen-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Amount (₹)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="canteenBillTableBody">
+                            <tr class="empty-row">
+                                <td colspan="3">No canteen items added yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section id="expense-section">
+                    <h2>Expenses</h2>
+                    <form id="expenseForm">
+                        <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 12px;">
+                            <label style="margin-bottom:0;">
+                                Expense Description:
+                                <input type="text" id="expenseDesc" placeholder="Description" required />
+                            </label>
+                            <label style="margin-bottom:0;">
+                                Amount:
+                                <input type="number" id="expenseAmount" placeholder="Amount" min="1" required />
+                            </label>
+                            <button type="submit"
+                                style="height: 44px; padding: 0 24px; font-size: 1rem; border-radius: 20px; font-weight: 700; margin-top: 24px; width: auto;">Add
+                                Expense</button>
+                        </div>
+                    </form>
+                    <table class="expense-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Amount (₹)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseTableBody">
+                            <tr class="empty-row">
+                                <td colspan="3">No expenses added yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+        <section id="summary-section" style="margin-bottom: 40px; padding-top: 28px;">
+            <h2>Summary</h2>
+            <table style="margin-top:24px;">
+                <thead>
+                    <tr>
+                        <th>Room Category</th>
+                        <th>Cash (₹)</th>
+                        <th>Online (₹)</th>
+                        <th>Grand Total (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryCollectionBody">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+            <div style="display: flex; justify-content: flex-end; gap: 18px; margin-top: 20px;">
+                <button id="printAll"
+                    style="padding: 10px 24px; font-size: 1rem; border-radius: 20px; font-weight: 700; width: auto;">Print</button>
+                <button id="clearStorage"
+                    style="padding: 10px 24px; font-size: 1rem; border-radius: 20px; font-weight: 700; background: #d32f2f; color: #fff; width: auto;">Clear
+                    All Data</button>
+            </div>
+        </section>
+
+
+    </div>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
